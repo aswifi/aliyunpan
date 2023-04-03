@@ -27,6 +27,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
 
+      - name: Update package.json
+        run: ncu -u
+
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
