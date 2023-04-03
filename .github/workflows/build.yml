@@ -8,7 +8,7 @@ on:
 jobs:
   release:
     name: build and release
-    runs-on: windows-latest # 只在 Windows 环境下执行
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Git repository
@@ -20,7 +20,7 @@ jobs:
           node-version: 18
           registry-url: https://registry.npmjs.org/
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
@@ -36,8 +36,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN_PUB }}
 
       - name: upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Windows
           path: |
-            release\** # 上传生成的打包文件夹
+            release/**
