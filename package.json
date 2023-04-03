@@ -7,7 +7,7 @@
   "license": "",
   "scripts": {
     "dev": "vite",
-    "build:win": "vue-tsc --noEmit && vite build && electron-builder -wm --windows"
+    "build:win": "vue-tsc --noEmit && vite build && electron-builder -w"
   },
   "engines": {
     "node": ">=14.17.0"
