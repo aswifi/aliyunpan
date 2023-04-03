@@ -8,12 +8,7 @@ on:
 jobs:
   release:
     name: build and release
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: windows-latest # 只在 Windows 环境下执行
 
     steps:
       - name: Checkout Git repository
@@ -25,20 +20,7 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v3
-        id: cache-yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - uses: actions/cache@v3
-        id: cache-node-modules
+      - uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
@@ -46,31 +28,16 @@ jobs:
             ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
 
       - name: Install Dependencies
-        if: |
-          steps.cache-yarn-cache.outputs.cache-hit != 'true' ||
-          steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: |
-          npm install -g yarn
-          yarn install
+        run: yarn install --frozen-lockfile
 
-      - name: Build Electron App
-        run: yarn run build
+      - name: Build Electron App for Windows
+        run: yarn run build:win
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Cleanup Artifacts for Linux
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          npx rimraf "release/!(*.AppImage)"
-
-      - name: Cleanup Artifacts for MacOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          npx rimraf "release/!(*.dmg)"
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN_PUB }}
 
       - name: upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.os }}
+          name: Windows
           path: |
-            release/**
+            release-win/** # 上传生成的打包文件夹
