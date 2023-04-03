@@ -11,35 +11,6 @@
   "files": [
     "dist"
   ],
-  "mac": {
-    "icon": "./static/images/icon.png",
-    "type": "distribution",
-    "darkModeSupport": true,
-    "hardenedRuntime": true,
-    "category": "public.app-category.utilities",
-    "extraResources": [
-      { "from": "./static/engine/darwin", "to": "./engine"},
-      { "from": "./static/engine/aria2.conf", "to": "./engine/aria2.conf"},
-      { "from": "./static/crx", "to": "./crx"},
-      { "from": "./static/images/app.ico", "to": "."},
-      { "from": "./static/images/app.png", "to": "."}
-    ],
-    "target": [
-      { "target": "dmg", "arch": [ "x64", "arm64" ] }
-    ]
-  },
-  "linux": {
-    "icon": "./static/images/icon.png",
-    "category": "Network",
-    "extraResources": [
-      { "from": "./static/engine/linux", "to": "./engine"},
-      { "from": "./static/engine/aria2.conf", "to": "./engine/aria2.conf"},
-      { "from": "./static/crx", "to": "./crx"},
-      { "from": "./static/images/app.ico", "to": "."},
-      { "from": "./static/images/app.png", "to": "."}
-    ],
-    "target": [ "AppImage" ]
-  },
   "win": {
     "icon": "./static/images/icon.png",
     "extraResources": [
